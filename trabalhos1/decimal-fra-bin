@@ -1,0 +1,96 @@
+#parte 1
+
+import math
+
+# Função para converter um número decimal fracionário em binário
+# Recebe como parâmetros o número decimal e o número de bits para a parte fracionária (16 bits por padrão)
+def decimal_fracionario_para_binario(decimal, num_bits=16):
+    # Separa a parte inteira e fracionária do número decimal
+    inteiro, fracionario = str(decimal).split(".")
+    
+    # Converte a parte inteira para binário
+    def inteiro_binario(decimal):
+        binario = '' # cria uma string vazia para armazenar o resultado em binário
+        while decimal > 0: # enquanto o decimal for maior que zero
+            resto = decimal % 2 # obtém o resto da divisão por 2
+            binario = str(resto) + binario # concatena o resto ao início da string binário
+            decimal //= 2 # divide o decimal por 2 e arredonda para baixo (divisão inteira)
+        return binario # retorna a string com o número em binário
+    
+    # Inicializa a parte fracionária em binário como uma string vazia
+    fracionario_binario = ""
+    # Converte a parte fracionária para float
+    fracionario = float("0." + str(fracionario))
+    # Enquanto a parte fracionária for maior que 0 e não ultrapassar o número de bits especificado
+    while fracionario > 0 and len(fracionario_binario) < num_bits:
+        # Multiplica a parte fracionária por 2
+        fracionario *= 2
+        # Se o resultado for maior ou igual a 1, adiciona 1 à parte fracionária em binário e subtrai 1 do resultado
+        if fracionario >= 1:
+            fracionario_binario += "1"
+            fracionario -= 1
+        # Caso contrário, adiciona 0 à parte fracionária em binário
+        else:
+            fracionario_binario += "0"
+    
+    # Retorna o número inteiro e fracionário em binário concatenados com um ponto
+    return str(inteiro_binario(int(inteiro))) + "." + str(fracionario_binario)
+
+
+
+#parte 2
+
+# Função para converter um número binário fracionário em decimal
+def binario_fracionario_para_decimal(binario):
+    # Separa a parte inteira e fracionária do número binário
+    inteiro, fracionario = binario.split(".")
+    
+    # Converte a parte inteira para decimal
+    def binario_para_decimal(binario):
+        # inicia o decimal com valor 0
+        decimal2 = 0
+        # define o valor da potencia com base na quantidade de numeros binarios, como começa no 0 se deve diminuir 1    
+        potencia = len(binario)-1
+        # para cada digito em binario    
+        for digito in binario:
+            # decimal é somado com cada digito do binario multiplicado por 2 e sua respectiva potencia
+            decimal2 += int(digito)*2**potencia
+            # potencia diminui 1 para que o proximo digito seja elevado pela potência antecessora
+            potencia -=1
+        return decimal2
+    
+    decimal_fracionario = 0
+    # define o valor da potencia com base na quantidade de numeros binarios, como começa no -1 se deve diminuir 1    
+    potencia = -len(fracionario)
+    # Para cada dígito da parte fracionária
+    for digito in fracionario:
+        # decimal fracionario é somado com cada digito do binario multiplicado por 2 e sua respectiva potencia so que negativo
+        decimal_fracionario += int(digito)*2**(potencia)
+        # potencia diminui 1 para que o proximo digito seja elevado pela potência antecessora
+        potencia -= 1
+
+    return binario_para_decimal(inteiro) + decimal_fracionario
+
+decimal_binario = input("escreva o seu numero decimal fracionario ")
+print("o seu numero decimal fracionario convertido para binario é ", decimal_fracionario_para_binario(str(decimal_binario)))
+
+binario_decimal = input("escreva o seu numero binario fracionario ")
+print("o seu numero binario fracionario convertido para decimal é ", binario_fracionario_para_decimal(str(binario_decimal)))
+
+
+
+
+
+
+#algoritomo logico em que esse codigo foi baseado
+# 1 Separar a parte inteira e fracionária do número decimal
+# 2 Converter a parte inteira em binário, peguei o codigo usado no trabalho anterior
+
+# 3 Multiplicar a parte fracionária por 2, obter o bit mais significativo e concatená-lo à representação binária
+# 4 Repetir o passo 3 com o resultado até que a parte fracionária seja zero ou a representação binária atinja o número máximo de bits desejado.
+# 5 Para converter um número binário fracionário em decimal, podemos seguir o seguinte algoritmo:
+
+# 6 Separar a parte inteira e fracionária do número binário
+# 7 Converter a parte inteira em decimal
+# 8 Converter a parte fracionária em decimal, somando os valores correspondentes a cada bit de acordo com a posição.
+
